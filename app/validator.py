@@ -5,8 +5,10 @@ REQUIRED_COLUMNS = {"Дата","Номер группы","ФИО","Оценка"
 def parse_and_validate_csv(file_bytes: bytes):
     decoded = file_bytes.decode("utf-8-sig").splitlines()
     reader = csv.DictReader(decoded,delimiter=';')
+    
     fieldnames = reader.fieldnames
-    # print(fieldnames)
+
+    print(fieldnames)
     if not REQUIRED_COLUMNS.issubset(fieldnames):
         raise ValueError("Invalid CSV header")
 
