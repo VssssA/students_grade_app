@@ -1,10 +1,21 @@
 import asyncpg
 from app.config import settings
 
-pool = None
+_pool: asyncpg.Pool | None = None
 
-async def get_pool():
-    global pool
-    if pool is None:
-        pool = await asyncpg.create_pool(settings.database_url)
-    return pool
+
+async def get_pool() -> asyncpg.Pool:
+    global _pool
+
+    if _pool is None:
+        _pool = await asyncpg.create_pool(
+            host=settings.db_host,
+            port=settings.db_port,
+            user=settings.db_user,
+            password=settings.db_password,
+            database=settings.db_name,
+            min_size=1,
+            max_size=5,
+        )
+
+    return _pool
