@@ -1,38 +1,15 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
-
-from app.schemas.schemas import UploadResponse, StudentTwos
-from app.services.services import upload_grades_service, more_than_3, less_than_5
+from fastapi import FastAPI
+from app.api.endpoints.upload_csv import router as upload_csv_router 
+from app.api.endpoints.find_more_3_twos import router as find_more_than_3_router 
+from app.api.endpoints.find_less_5_twos import router as find_less_than_5_router
 
 app = FastAPI(title="Grades service")
 
+app.include_router(upload_csv_router)
+app.include_router(find_more_than_3_router)
+app.include_router(find_less_than_5_router)
 
-@app.get("/")
-async def hello_world():
-    return {"hello": "world"}
+# @app.get("/")
+# async def hello_world():
+#     return {"hello": "world"}
 
-
-@app.post("/upload-grades", response_model=UploadResponse)
-async def upload_grades(file: UploadFile = File(...)):
-    try:
-        content = await file.read()
-        return await upload_grades_service(content)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-
-@app.get(
-    "/students/more-than-3-twos",
-    response_model=list[StudentTwos],
-)
-async def more_than_3_twos():
-    rows = await more_than_3()
-    return rows
-
-
-@app.get(
-    "/students/less-than-5-twos",
-    response_model=list[StudentTwos],
-)
-async def less_than_5_twos():
-    rows = await less_than_5()
-    return rows
