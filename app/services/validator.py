@@ -2,13 +2,15 @@ import csv
 
 REQUIRED_COLUMNS = {"Дата","Номер группы","ФИО","Оценка"}
 
-def parse_and_validate_csv(file_bytes: bytes):
+def parse_and_validate_csv(file_bytes: bytes) -> list[tuple[str, int]]:
     decoded = file_bytes.decode("utf-8-sig").splitlines()
     reader = csv.DictReader(decoded,delimiter=';')
     
     fieldnames = reader.fieldnames
 
-    print(fieldnames)
+    if fieldnames is None:
+        raise ValueError("CSV file has no header")
+
     if not REQUIRED_COLUMNS.issubset(fieldnames):
         raise ValueError("Invalid CSV header")
 
@@ -27,4 +29,4 @@ def parse_and_validate_csv(file_bytes: bytes):
 
         rows.append((full_name, grade))
 
-    return rows
+    return rows 

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, File, HTTPException, UploadFile
 
 from app.schemas.schemas import UploadResponse
 from app.services.services import upload_grades_service
@@ -6,7 +6,7 @@ from app.services.services import upload_grades_service
 router = APIRouter()
 
 @router.post("/upload-grades", response_model=UploadResponse)
-async def upload_grades(file: UploadFile = File(...)):
+async def upload_grades(file: UploadFile = File(...)) -> dict[str,object]:
     try:
         content = await file.read()
         return await upload_grades_service(content)

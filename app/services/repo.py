@@ -40,7 +40,7 @@ async def insert_grades(rows: list[tuple[str, int]]) -> tuple[int, int]:
     return records_loaded, len(students_cache)
 
 
-async def get_students_with_twos(condition: str):
+async def get_students_with_twos(condition: str) -> list[dict[str,int]]:
     pool = await get_pool()
 
     async with pool.acquire() as conn:

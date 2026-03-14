@@ -9,6 +9,6 @@ router = APIRouter()
     "/students/less-than-5-twos",
     response_model=list[StudentTwos],
 )
-async def less_than_5_twos():
+async def less_than_5_twos() -> list[dict[str,int]]:
     rows = await less_than_5()
     return rows
