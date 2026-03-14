@@ -1,5 +1,5 @@
-from app.validator import parse_and_validate_csv
-from app.repo import insert_grades, get_students_with_twos
+from app.services.validator import parse_and_validate_csv
+from app.services.repo import insert_grades, get_students_with_twos
 
 
 async def upload_grades_service(content: bytes):

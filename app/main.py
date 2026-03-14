@@ -1,7 +1,7 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 
-from app.schemas import UploadResponse, StudentTwos
-from app.services import upload_grades_service, more_than_3, less_than_5
+from app.schemas.schemas import UploadResponse, StudentTwos
+from app.services.services import upload_grades_service, more_than_3, less_than_5
 
 app = FastAPI(title="Grades service")
 
