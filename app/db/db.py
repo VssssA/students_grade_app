@@ -1,8 +1,8 @@
 import asyncpg
+
 from app.core.config import settings
 
 _pool: asyncpg.Pool | None = None
-
 
 async def get_pool() -> asyncpg.Pool:
     global _pool

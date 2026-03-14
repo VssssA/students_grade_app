@@ -1,5 +1,5 @@
 import io
-import pytest
+
 
 def test_upload_csv_success(test_app):
     csv_content = """Дата;Номер группы;ФИО;Оценка
