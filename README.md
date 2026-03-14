@@ -59,14 +59,12 @@ GET /students/less-than-5-twos
 curl -X GET http://localhost:8000/students/less-than-5-twos \
   -H "Accept: application/json"
 ```
-Запуск линтеров 
 Для запуска ruff и mypy выполните команды (первая устранит недостатки в написании кода, вторая укажет на проблемные участки):
 ```
 ruff check . --fix
 mypy app
 ```
 
-Запуск тестов
 Для запуска тестов выполните команду:
 
 ```
