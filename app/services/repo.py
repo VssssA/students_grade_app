@@ -1,4 +1,4 @@
-from app.db import get_pool
+from app.db.db import get_pool
 
 
 async def insert_grades(rows: list[tuple[str, int]]) -> tuple[int, int]:
@@ -55,5 +55,5 @@ async def get_students_with_twos(condition: str):
             """
         )
 
-    return [dict(r) for r in rows]  # ⭐ ВОТ ЭТО КЛЮЧ
+    return [dict(r) for r in rows] 
 
