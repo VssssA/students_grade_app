@@ -1,9 +1,8 @@
-from app.db.db import get_pool
+from app.db import get_pool
 
 
 async def insert_grades(rows: list[tuple[str, int]]) -> tuple[int, int]:
     pool = await get_pool()
-
     students_cache: dict[str, int] = {}
     records_loaded = 0
 

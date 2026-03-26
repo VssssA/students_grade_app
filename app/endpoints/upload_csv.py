@@ -1,6 +1,6 @@
 from fastapi import APIRouter, File, HTTPException, UploadFile
 
-from app.schemas.schemas import UploadResponse
+from app.schemas import UploadResponse
 from app.services.services import upload_grades_service
 
 router = APIRouter()

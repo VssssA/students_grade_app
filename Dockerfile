@@ -6,10 +6,13 @@ RUN pip install psycopg2-binary
 
 COPY requirements.txt .
 
- 
+COPY alembic.ini .
+
 RUN pip install -r requirements.txt
 
 COPY app ./app
+
+COPY migration ./migration
 
 COPY tests ./tests
 

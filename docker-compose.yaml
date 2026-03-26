@@ -1,53 +1,72 @@
-version: "3.9"
+version: '3.8'
 
 services:
   db:
     image: postgres:15
-    env_file:
-      - .env
+    container_name: app_db
     environment:
-      POSTGRES_USERNAME: ${POSTGRES_USERNAME}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
     volumes:
-      - pg_data:/container/path:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - app_network
 
-  migrate:
-    image: postgres:15
-    env_file:
-      - .env
+  migrations:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app_migrations
+    depends_on:
+      db:
+        condition: service_healthy
     environment:
-      PGHOST: ${DB_HOST}
-      PGPORT: ${DB_PORT}
-      PGUSER: ${DB_USER}
-      PGPASSWORD: ${DB_PASSWORD}
-      PGDATABASE: ${DB_NAME}
-    volumes:
-      - ./migrations:/migrations
-    depends_on:
-      db:
-        condition: service_healthy
-    command:
-      [
-        "psql",
-        "-v", "ON_ERROR_STOP=1",
-        "-f", "/migrations/001_create_tables.sql"
-      ]
+      DB_HOST: ${DB_HOST:-db}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    command: >
+      sh -c "alembic upgrade head"
+    networks:
+      - app_network
+    restart: "no"
 
-  api:
-    build: .
-    env_file:
-      - .env
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app_main
     depends_on:
-      db:
-        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+    environment:
+      DB_HOST: ${DB_HOST:-db}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
     ports:
       - "8000:8000"
+    command: >
+      sh -c "uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    networks:
+      - app_network
+    volumes:
+      - ./app:/app/app
+    restart: unless-stopped
 
 volumes:
-  pg_data:
+  postgres_data:
+
+networks:
+  app_network:
+    driver: bridge
