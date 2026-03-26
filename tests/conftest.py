@@ -7,5 +7,3 @@ from app.main import app
 @pytest.fixture(scope="session")
 def test_app():
     return TestClient(app)
-
-
