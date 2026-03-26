@@ -12,10 +12,27 @@ git clone git@github.com:VssssA/students_grade_app.git
 cd students_grade_app
 ```
 
-Запустите проект через Docker Compose:
+2. **Создайте и отредоктируйте .env файл, на примере .env.example файла:**
+```
+POSTGRES_USER=grades_user
+POSTGRES_PASSWORD=SecurePass123!
+POSTGRES_DB=grades
+
+DB_HOST=db
+DB_PORT=5432
+DB_NAME=grades
+DB_USER=grades_user
+DB_PASSWORD=SecurePass123!
+
+DEBUG=true
+ENVIRONMENT=dev
+```
+
+3. Запустите проект через Docker Compose:
 ```
 docker compose up --build
 ```
+### API
 После успешного запуска API будет доступно по адресу: http://localhost:8000
 
 1.  Загрузка оценок студентов
@@ -59,12 +76,13 @@ GET /students/less-than-5-twos
 curl -X GET http://localhost:8000/students/less-than-5-twos \
   -H "Accept: application/json"
 ```
+### Запуск линтеров
 Для запуска ruff и mypy выполните команды (первая устранит недостатки в написании кода, вторая укажет на проблемные участки):
 ```
 ruff check . --fix
 mypy app
 ```
-
+### Запуск тестов
 Для запуска тестов выполните команду:
 
 ```
